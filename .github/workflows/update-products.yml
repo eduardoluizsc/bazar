@@ -1,0 +1,65 @@
+name: Atualizar Produtos
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # toda hora
+  workflow_dispatch:        # manual pelo GitHub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sincronizar produtos e imagens do Google Drive
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, urllib.request, urllib.parse, pathlib
+
+          API_KEY   = os.environ['GOOGLE_API_KEY']
+          FOLDER_ID = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV'
+          IMG_DIR   = pathlib.Path('images')
+          IMG_DIR.mkdir(exist_ok=True)
+
+          # Listar arquivos
+          params = urllib.parse.urlencode({
+              'q': f"'{FOLDER_ID}' in parents and trashed = false",
+              'key': API_KEY,
+              'fields': 'files(id,name,mimeType)',
+              'orderBy': 'name',
+              'pageSize': '200',
+          })
+          with urllib.request.urlopen(f"https://www.googleapis.com/drive/v3/files?{params}") as r:
+              data = json.loads(r.read())
+
+          files = [f for f in data.get('files', []) if f.get('mimeType','').startswith('image/')]
+
+          # Baixar imagens novas
+          for f in files:
+              dest = IMG_DIR / f['name']
+              if dest.exists():
+                  print(f"OK (já existe): {f['name']}")
+                  continue
+              url = f"https://www.googleapis.com/drive/v3/files/{f['id']}?alt=media&key={API_KEY}"
+              print(f"Baixando: {f['name']}")
+              urllib.request.urlretrieve(url, dest)
+
+          # Gerar products.json
+          products = [{'name': f['name']} for f in files]
+          with open('products.json', 'w', encoding='utf-8') as fp:
+              json.dump(products, fp, indent=2, ensure_ascii=False)
+
+          print(f"{len(files)} produto(s) processado(s).")
+          EOF
+
+      - name: Commit se houver mudanças
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add products.json images/
+          git diff --staged --quiet && echo "Sem mudanças." || (git commit -m "Atualiza produtos e imagens automaticamente" && git push)

@@ -157,9 +157,7 @@
 </footer>
 
 <script>
-  const WHATSAPP   = '5531998473521';
-  const API_KEY    = 'COLE_SUA_API_KEY_AQUI';
-  const FOLDER_ID  = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV';
+  const WHATSAPP = '5531998473521';
 
   function parseName(filename) {
     const base   = filename.replace(/\.[^.]+$/, '');   // sem extensão
@@ -186,9 +184,9 @@
     return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
   }
 
-  function buildCard({ id, name }) {
+  function buildCard({ name }) {
     const { label, status, price } = parseName(name);
-    const imgUrl   = `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+    const imgUrl   = `./images/${name}`;
     const waText   = encodeURIComponent(`Olá! Tenho interesse em: ${label}${price ? ' (' + formatPrice(price) + ')' : ' (de graça)'}.`);
     const waLink   = `https://wa.me/${WHATSAPP}?text=${waText}`;
 
@@ -232,23 +230,11 @@
     const grid = document.getElementById('grid');
 
     try {
-      const params = new URLSearchParams({
-        q: `'${FOLDER_ID}' in parents and trashed = false`,
-        key: API_KEY,
-        fields: 'files(id,name,mimeType)',
-        orderBy: 'name',
-        pageSize: '200',
-      });
-
-      const res  = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`);
-      const data = await res.json();
-
-      if (data.error) throw new Error(data.error.message);
-
-      const files = (data.files || []).filter(f => f.mimeType.startsWith('image/'));
+      const res   = await fetch('./products.json');
+      const files = await res.json();
 
       if (!files.length) {
-        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado na pasta.</div>`;
+        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado.</div>`;
         return;
       }
 
