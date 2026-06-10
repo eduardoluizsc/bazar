@@ -17,17 +17,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Instalar suporte a HEIC
+        run: sudo apt-get install -y libheif-examples imagemagick
+
       - name: Sincronizar produtos e imagens do Google Drive
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 - <<'EOF'
-          import json, os, urllib.request, urllib.parse, pathlib, sys
+          import json, os, subprocess, urllib.request, urllib.parse, pathlib, sys
 
           API_KEY   = os.environ.get('GOOGLE_API_KEY', '')
           FOLDER_ID = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV'
           IMG_DIR   = pathlib.Path('images')
           IMG_DIR.mkdir(exist_ok=True)
+
+          HEIC_EXTS = {'.heic', '.heif'}
 
           if not API_KEY:
               print("ERRO: GOOGLE_API_KEY não configurada.")
@@ -53,17 +58,39 @@ jobs:
                   sys.exit(1)
               return data.get('files', [])
 
-          def download(file_id, dest):
+          def final_name(original_name):
+              """Retorna o nome final do arquivo (converte HEIC → .jpg)"""
+              p = pathlib.Path(original_name)
+              if p.suffix.lower() in HEIC_EXTS:
+                  return p.stem + '.jpg'
+              return original_name
+
+          def download(file_id, original_name):
+              dest_name = final_name(original_name)
+              dest = IMG_DIR / dest_name
+
               if dest.exists():
-                  print(f"  OK (já existe): {dest.name}")
-                  return
+                  print(f"  OK (já existe): {dest_name}")
+                  return dest_name
+
               url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
-              print(f"  Baixando: {dest.name}")
+              tmp  = IMG_DIR / original_name
+              print(f"  Baixando: {original_name}")
               try:
-                  urllib.request.urlretrieve(url, dest)
+                  urllib.request.urlretrieve(url, tmp)
               except urllib.error.HTTPError as e:
-                  print(f"  ERRO ao baixar {dest.name}: HTTP {e.code}\n  {e.read().decode()}")
+                  print(f"  ERRO ao baixar {original_name}: HTTP {e.code}\n  {e.read().decode()}")
                   sys.exit(1)
+
+              # Converter HEIC → JPEG
+              if pathlib.Path(original_name).suffix.lower() in HEIC_EXTS:
+                  print(f"  Convertendo HEIC → JPG: {dest_name}")
+                  subprocess.run(['convert', str(tmp), str(dest)], check=True)
+                  tmp.unlink()
+              else:
+                  tmp.rename(dest)
+
+              return dest_name
 
           products = []
 
@@ -76,16 +103,16 @@ jobs:
               print(f"\n[{category}]")
               images = [f for f in drive_list(folder['id']) if f['mimeType'].startswith('image/')]
               for f in images:
-                  download(f['id'], IMG_DIR / f['name'])
-                  products.append({'name': f['name'], 'category': category})
+                  saved_name = download(f['id'], f['name'])
+                  products.append({'name': saved_name, 'category': category})
 
           # Arquivos soltos na raiz = categoria "Geral"
           root_images = [f for f in drive_list(FOLDER_ID) if f['mimeType'].startswith('image/')]
           if root_images:
               print(f"\n[Geral]")
           for f in root_images:
-              download(f['id'], IMG_DIR / f['name'])
-              products.append({'name': f['name'], 'category': 'Geral'})
+              saved_name = download(f['id'], f['name'])
+              products.append({'name': saved_name, 'category': 'Geral'})
 
           with open('products.json', 'w', encoding='utf-8') as fp:
               json.dump(products, fp, indent=2, ensure_ascii=False)
