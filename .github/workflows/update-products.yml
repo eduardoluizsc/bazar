@@ -2,8 +2,11 @@ name: Atualizar Produtos
 
 on:
   schedule:
-    - cron: '0 * * * *'   # toda hora
-  workflow_dispatch:        # manual pelo GitHub
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update:
@@ -19,12 +22,16 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 - <<'EOF'
-          import json, os, urllib.request, urllib.parse, pathlib
+          import json, os, urllib.request, urllib.parse, pathlib, sys
 
-          API_KEY   = os.environ['GOOGLE_API_KEY']
+          API_KEY   = os.environ.get('GOOGLE_API_KEY', '')
           FOLDER_ID = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV'
           IMG_DIR   = pathlib.Path('images')
           IMG_DIR.mkdir(exist_ok=True)
+
+          if not API_KEY:
+              print("ERRO: GOOGLE_API_KEY não configurada nos secrets do repositório.")
+              sys.exit(1)
 
           # Listar arquivos
           params = urllib.parse.urlencode({
@@ -34,27 +41,44 @@ jobs:
               'orderBy': 'name',
               'pageSize': '200',
           })
-          with urllib.request.urlopen(f"https://www.googleapis.com/drive/v3/files?{params}") as r:
-              data = json.loads(r.read())
+
+          try:
+              with urllib.request.urlopen(f"https://www.googleapis.com/drive/v3/files?{params}") as r:
+                  data = json.loads(r.read())
+          except urllib.error.HTTPError as e:
+              body = e.read().decode()
+              print(f"ERRO ao listar arquivos: HTTP {e.code}\n{body}")
+              sys.exit(1)
+
+          if 'error' in data:
+              print(f"ERRO da API: {data['error']}")
+              sys.exit(1)
 
           files = [f for f in data.get('files', []) if f.get('mimeType','').startswith('image/')]
+          print(f"{len(files)} imagem(ns) encontrada(s) na pasta.")
 
           # Baixar imagens novas
           for f in files:
               dest = IMG_DIR / f['name']
               if dest.exists():
-                  print(f"OK (já existe): {f['name']}")
+                  print(f"  OK (já existe): {f['name']}")
                   continue
               url = f"https://www.googleapis.com/drive/v3/files/{f['id']}?alt=media&key={API_KEY}"
-              print(f"Baixando: {f['name']}")
-              urllib.request.urlretrieve(url, dest)
+              print(f"  Baixando: {f['name']}")
+              try:
+                  urllib.request.urlretrieve(url, dest)
+                  print(f"  Salvo: {dest} ({dest.stat().st_size} bytes)")
+              except urllib.error.HTTPError as e:
+                  body = e.read().decode()
+                  print(f"  ERRO ao baixar {f['name']}: HTTP {e.code}\n  {body}")
+                  sys.exit(1)
 
           # Gerar products.json
           products = [{'name': f['name']} for f in files]
           with open('products.json', 'w', encoding='utf-8') as fp:
               json.dump(products, fp, indent=2, ensure_ascii=False)
 
-          print(f"{len(files)} produto(s) processado(s).")
+          print(f"\nFinalizado: {len(files)} produto(s).")
           EOF
 
       - name: Commit se houver mudanças
