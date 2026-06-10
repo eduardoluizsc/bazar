@@ -157,7 +157,9 @@
 </footer>
 
 <script>
-  const WHATSAPP = '5531998473521';
+  const WHATSAPP   = '5531998473521';
+  const API_KEY    = 'COLE_SUA_API_KEY_AQUI';
+  const FOLDER_ID  = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV';
 
   function parseName(filename) {
     const base   = filename.replace(/\.[^.]+$/, '');   // sem extensão
@@ -230,11 +232,23 @@
     const grid = document.getElementById('grid');
 
     try {
-      const res   = await fetch('./products.json');
-      const files = await res.json();
+      const params = new URLSearchParams({
+        q: `'${FOLDER_ID}' in parents and trashed = false`,
+        key: API_KEY,
+        fields: 'files(id,name,mimeType)',
+        orderBy: 'name',
+        pageSize: '200',
+      });
+
+      const res  = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`);
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error.message);
+
+      const files = (data.files || []).filter(f => f.mimeType.startsWith('image/'));
 
       if (!files.length) {
-        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado.</div>`;
+        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado na pasta.</div>`;
         return;
       }
 
