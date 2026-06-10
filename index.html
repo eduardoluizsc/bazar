@@ -45,6 +45,14 @@
     .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
     .section-sub { color: var(--muted); font-size: .95rem; margin-bottom: 40px; }
 
+    /* CATEGORIA */
+    .category-block { margin-bottom: 56px; }
+    .category-title {
+      font-size: 1.2rem; font-weight: 700; color: var(--brand);
+      border-left: 4px solid var(--accent); padding-left: 12px;
+      margin-bottom: 24px; text-transform: capitalize;
+    }
+
     /* GRID */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
 
@@ -132,8 +140,8 @@
 <main class="section">
   <h2 class="section-title">Produtos à venda</h2>
   <p class="section-sub">Todos os itens estão em ótimo estado de conservação. Apenas retirada.</p>
-  <div class="grid" id="grid">
-    <div class="state-msg" id="loading">
+  <div id="grid">
+    <div class="state-msg">
       <div class="spinner"></div>
       Carregando produtos…
     </div>
@@ -227,20 +235,34 @@
   }
 
   async function loadProducts() {
-    const grid = document.getElementById('grid');
+    const container = document.getElementById('grid');
 
     try {
       const res   = await fetch('./products.json');
       const files = await res.json();
 
       if (!files.length) {
-        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado.</div>`;
+        container.innerHTML = `<div class="state-msg">Nenhum produto encontrado.</div>`;
         return;
       }
 
-      grid.innerHTML = files.map(buildCard).join('');
+      // Agrupar por categoria
+      const groups = {};
+      for (const f of files) {
+        const cat = f.category || 'Geral';
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(f);
+      }
+
+      container.innerHTML = Object.entries(groups).map(([cat, items]) => `
+        <div class="category-block">
+          <div class="category-title">${cat}</div>
+          <div class="grid">${items.map(buildCard).join('')}</div>
+        </div>
+      `).join('');
+
     } catch (e) {
-      grid.innerHTML = `<div class="state-msg">Erro ao carregar produtos.<br><small>${e.message}</small></div>`;
+      container.innerHTML = `<div class="state-msg">Erro ao carregar produtos.<br><small>${e.message}</small></div>`;
       console.error(e);
     }
   }

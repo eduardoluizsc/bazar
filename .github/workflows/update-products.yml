@@ -30,55 +30,67 @@ jobs:
           IMG_DIR.mkdir(exist_ok=True)
 
           if not API_KEY:
-              print("ERRO: GOOGLE_API_KEY não configurada nos secrets do repositório.")
+              print("ERRO: GOOGLE_API_KEY não configurada.")
               sys.exit(1)
 
-          # Listar arquivos
-          params = urllib.parse.urlencode({
-              'q': f"'{FOLDER_ID}' in parents and trashed = false",
-              'key': API_KEY,
-              'fields': 'files(id,name,mimeType)',
-              'orderBy': 'name',
-              'pageSize': '200',
-          })
+          def drive_list(parent_id, mime_filter=None):
+              q = f"'{parent_id}' in parents and trashed = false"
+              if mime_filter:
+                  q += f" and mimeType = '{mime_filter}'"
+              params = urllib.parse.urlencode({
+                  'q': q, 'key': API_KEY,
+                  'fields': 'files(id,name,mimeType)',
+                  'orderBy': 'name', 'pageSize': '200',
+              })
+              try:
+                  with urllib.request.urlopen(f"https://www.googleapis.com/drive/v3/files?{params}") as r:
+                      data = json.loads(r.read())
+              except urllib.error.HTTPError as e:
+                  print(f"ERRO HTTP {e.code}: {e.read().decode()}")
+                  sys.exit(1)
+              if 'error' in data:
+                  print(f"ERRO API: {data['error']}")
+                  sys.exit(1)
+              return data.get('files', [])
 
-          try:
-              with urllib.request.urlopen(f"https://www.googleapis.com/drive/v3/files?{params}") as r:
-                  data = json.loads(r.read())
-          except urllib.error.HTTPError as e:
-              body = e.read().decode()
-              print(f"ERRO ao listar arquivos: HTTP {e.code}\n{body}")
-              sys.exit(1)
-
-          if 'error' in data:
-              print(f"ERRO da API: {data['error']}")
-              sys.exit(1)
-
-          files = [f for f in data.get('files', []) if f.get('mimeType','').startswith('image/')]
-          print(f"{len(files)} imagem(ns) encontrada(s) na pasta.")
-
-          # Baixar imagens novas
-          for f in files:
-              dest = IMG_DIR / f['name']
+          def download(file_id, dest):
               if dest.exists():
-                  print(f"  OK (já existe): {f['name']}")
-                  continue
-              url = f"https://www.googleapis.com/drive/v3/files/{f['id']}?alt=media&key={API_KEY}"
-              print(f"  Baixando: {f['name']}")
+                  print(f"  OK (já existe): {dest.name}")
+                  return
+              url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
+              print(f"  Baixando: {dest.name}")
               try:
                   urllib.request.urlretrieve(url, dest)
-                  print(f"  Salvo: {dest} ({dest.stat().st_size} bytes)")
               except urllib.error.HTTPError as e:
-                  body = e.read().decode()
-                  print(f"  ERRO ao baixar {f['name']}: HTTP {e.code}\n  {body}")
+                  print(f"  ERRO ao baixar {dest.name}: HTTP {e.code}\n  {e.read().decode()}")
                   sys.exit(1)
 
-          # Gerar products.json
-          products = [{'name': f['name']} for f in files]
+          products = []
+
+          # Subpastas = categorias
+          subfolders = drive_list(FOLDER_ID, mime_filter='application/vnd.google-apps.folder')
+          print(f"{len(subfolders)} categoria(s) encontrada(s).")
+
+          for folder in subfolders:
+              category = folder['name']
+              print(f"\n[{category}]")
+              images = [f for f in drive_list(folder['id']) if f['mimeType'].startswith('image/')]
+              for f in images:
+                  download(f['id'], IMG_DIR / f['name'])
+                  products.append({'name': f['name'], 'category': category})
+
+          # Arquivos soltos na raiz = categoria "Geral"
+          root_images = [f for f in drive_list(FOLDER_ID) if f['mimeType'].startswith('image/')]
+          if root_images:
+              print(f"\n[Geral]")
+          for f in root_images:
+              download(f['id'], IMG_DIR / f['name'])
+              products.append({'name': f['name'], 'category': 'Geral'})
+
           with open('products.json', 'w', encoding='utf-8') as fp:
               json.dump(products, fp, indent=2, ensure_ascii=False)
 
-          print(f"\nFinalizado: {len(files)} produto(s).")
+          print(f"\nFinalizado: {len(products)} produto(s).")
           EOF
 
       - name: Commit se houver mudanças
