@@ -40,6 +40,29 @@
     .contact-bar { background: var(--accent); text-align: center; padding: 14px 24px; font-weight: 600; font-size: .95rem; color: #fff; }
     .contact-bar a { color: #fff; text-decoration: underline; }
 
+    /* NAV CATEGORIAS */
+    .cat-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff; border-bottom: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .cat-nav-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 24px; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cat-nav-inner::-webkit-scrollbar { display: none; }
+    .cat-nav a {
+      display: inline-block; padding: 14px 18px;
+      font-size: .9rem; font-weight: 600; color: var(--muted);
+      text-decoration: none; white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .cat-nav a:hover { color: var(--brand); }
+    .cat-nav a.active { color: var(--brand); border-bottom-color: var(--accent); }
+
     /* SECTION */
     .section { max-width: 1160px; margin: 0 auto; padding: 60px 24px; }
     .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
@@ -136,6 +159,10 @@
   <a href="https://wa.me/5531998473521" target="_blank">+55 (31) 99847-3521</a>
   &nbsp;·&nbsp; Retirada em Belo Horizonte
 </div>
+
+<nav class="cat-nav" id="cat-nav" style="display:none">
+  <div class="cat-nav-inner" id="cat-nav-inner"></div>
+</nav>
 
 <main class="section">
   <h2 class="section-title">Produtos à venda</h2>
@@ -234,6 +261,10 @@
       </div>`;
   }
 
+  function slugify(str) {
+    return str.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  }
+
   async function loadProducts() {
     const container = document.getElementById('grid');
 
@@ -254,12 +285,39 @@
         groups[cat].push(f);
       }
 
+      // Renderizar seções com id para anchor
       container.innerHTML = Object.entries(groups).map(([cat, items]) => `
-        <div class="category-block">
+        <div class="category-block" id="cat-${slugify(cat)}">
           <div class="category-title">${cat}</div>
           <div class="grid">${items.map(buildCard).join('')}</div>
         </div>
       `).join('');
+
+      // Montar menu de navegação
+      const nav     = document.getElementById('cat-nav');
+      const navInner = document.getElementById('cat-nav-inner');
+      const categories = Object.keys(groups);
+
+      if (categories.length > 1) {
+        navInner.innerHTML = categories.map(cat =>
+          `<a href="#cat-${slugify(cat)}">${cat}</a>`
+        ).join('');
+        nav.style.display = 'block';
+
+        // Destacar categoria visível
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              navInner.querySelectorAll('a').forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+              });
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+
+        document.querySelectorAll('.category-block').forEach(el => observer.observe(el));
+      }
 
     } catch (e) {
       container.innerHTML = `<div class="state-msg">Erro ao carregar produtos.<br><small>${e.message}</small></div>`;
