@@ -18,14 +18,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Instalar suporte a HEIC
-        run: sudo apt-get install -y libheif-examples imagemagick
+        run: pip install pillow pillow-heif
 
       - name: Sincronizar produtos e imagens do Google Drive
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 - <<'EOF'
-          import json, os, subprocess, urllib.request, urllib.parse, pathlib, sys
+          import json, os, urllib.request, urllib.parse, pathlib, sys
+          from PIL import Image
+          import pillow_heif
+          pillow_heif.register_heif_opener()
 
           API_KEY   = os.environ.get('GOOGLE_API_KEY', '')
           FOLDER_ID = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV'
@@ -85,7 +88,8 @@ jobs:
               # Converter HEIC → JPEG
               if pathlib.Path(original_name).suffix.lower() in HEIC_EXTS:
                   print(f"  Convertendo HEIC → JPG: {dest_name}")
-                  subprocess.run(['convert', str(tmp), str(dest)], check=True)
+                  img = Image.open(tmp)
+                  img.convert('RGB').save(dest, 'JPEG', quality=90)
                   tmp.unlink()
               else:
                   tmp.rename(dest)
