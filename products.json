@@ -1,14 +1,18 @@
 [
   {
-    "name": "cadeira_0.png"
+    "name": "geladeira_3500.png",
+    "category": "Eletronicos"
   },
   {
-    "name": "geladeira_3500.png"
+    "name": "cadeira_0.png",
+    "category": "Moveis"
   },
   {
-    "name": "mesa_vendido.jpeg"
+    "name": "mesa_vendido.jpeg",
+    "category": "Geral"
   },
   {
-    "name": "sofa_1500.png"
+    "name": "sofa_1500.png",
+    "category": "Geral"
   }
 ]
