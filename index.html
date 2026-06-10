@@ -151,7 +151,7 @@
   <span class="flag">🇬🇧</span>
   <h1>Mudança para o <span>Reino Unido</span><br/>Tudo tem que ir!</h1>
   <p>Ótima oportunidade de comprar móveis e eletrodomésticos de qualidade por preços muito abaixo do mercado.</p>
-  <span class="badge">✈️ Partindo em breve · Entrega combinada</span>
+  <span class="badge">✈️ Partindo em breve</span>
 </header>
 
 <div class="contact-bar">
@@ -238,7 +238,7 @@
       ? `<div><div class="price sold-price">Item vendido</div></div>`
       : status === 'free'
         ? `<div><div class="price free">DE GRAÇA</div><div class="price-label">retire quanto antes!</div></div>`
-        : `<div><div class="price">${formatPrice(price)}</div><div class="price-label">à vista · negociável</div></div>`;
+        : `<div><div class="price">${formatPrice(price)}</div><div class="price-label">à vista</div></div>`;
 
     const btnHtml = status === 'sold'
       ? `<span class="btn-interest disabled">Indisponível</span>`
