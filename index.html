@@ -157,10 +157,7 @@
 </footer>
 
 <script>
-  // ── CONFIGURAÇÃO ──────────────────────────────────────────────
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoeE0p_2CwEoLqz-0hnf8izMf9IGtfy1MkVuM4OXfoMP_ieh5aCHBRlDHTVUhlIF0W/exec';
-  const WHATSAPP        = '5531998473521';
-  // ─────────────────────────────────────────────────────────────
+  const WHATSAPP = '5531998473521';
 
   function parseName(filename) {
     const base   = filename.replace(/\.[^.]+$/, '');   // sem extensão
@@ -229,31 +226,21 @@
       </div>`;
   }
 
-  function jsonp(url) {
-    return new Promise((resolve, reject) => {
-      const cb = '__bazar_' + Date.now();
-      window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
-      const script = document.createElement('script');
-      script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('Falha ao carregar')); };
-      script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
-      document.head.appendChild(script);
-    });
-  }
-
   async function loadProducts() {
     const grid = document.getElementById('grid');
 
     try {
-      const files = await jsonp(APPS_SCRIPT_URL);
+      const res   = await fetch('./products.json');
+      const files = await res.json();
 
       if (!files.length) {
-        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado na pasta.</div>`;
+        grid.innerHTML = `<div class="state-msg">Nenhum produto encontrado.</div>`;
         return;
       }
 
       grid.innerHTML = files.map(buildCard).join('');
     } catch (e) {
-      grid.innerHTML = `<div class="state-msg">Erro ao carregar produtos. Verifique a URL do Apps Script.<br><small>${e.message}</small></div>`;
+      grid.innerHTML = `<div class="state-msg">Erro ao carregar produtos.<br><small>${e.message}</small></div>`;
       console.error(e);
     }
   }
