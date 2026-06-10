@@ -5,7 +5,7 @@
 
 const FOLDER_ID = '1PysZOkqsBUF3V2jvCOO-_9gXEIEhEpxV';
 
-function doGet() {
+function doGet(e) {
   const folder = DriveApp.getFolderById(FOLDER_ID);
   const files = folder.getFiles();
   const result = [];
@@ -20,7 +20,16 @@ function doGet() {
     });
   }
 
+  const json = JSON.stringify(result);
+  const callback = e && e.parameter && e.parameter.callback;
+
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
   return ContentService
-    .createTextOutput(JSON.stringify(result))
+    .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
