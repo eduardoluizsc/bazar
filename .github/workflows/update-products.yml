@@ -61,12 +61,23 @@ jobs:
                   sys.exit(1)
               return data.get('files', [])
 
+          MAX_WIDTH  = 1200
+          MAX_HEIGHT = 1200
+          QUALITY    = 82
+
           def final_name(original_name):
-              """Retorna o nome final do arquivo (converte HEIC → .jpg)"""
               p = pathlib.Path(original_name)
-              if p.suffix.lower() in HEIC_EXTS:
+              if p.suffix.lower() in HEIC_EXTS or p.suffix.lower() in {'.png', '.bmp', '.tiff', '.webp'}:
                   return p.stem + '.jpg'
               return original_name
+
+          def save_optimized(img, dest):
+              img = img.convert('RGB')
+              img.thumbnail((MAX_WIDTH, MAX_HEIGHT), Image.LANCZOS)
+              original_size = dest.stat().st_size if dest.exists() else 0
+              img.save(dest, 'JPEG', quality=QUALITY, optimize=True)
+              kb = dest.stat().st_size // 1024
+              print(f"  Salvo: {dest.name} ({kb} KB)")
 
           def download(file_id, original_name):
               dest_name = final_name(original_name)
@@ -77,7 +88,7 @@ jobs:
                   return dest_name
 
               url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
-              tmp  = IMG_DIR / original_name
+              tmp = IMG_DIR / ('tmp_' + original_name)
               print(f"  Baixando: {original_name}")
               try:
                   urllib.request.urlretrieve(url, tmp)
@@ -85,14 +96,9 @@ jobs:
                   print(f"  ERRO ao baixar {original_name}: HTTP {e.code}\n  {e.read().decode()}")
                   sys.exit(1)
 
-              # Converter HEIC → JPEG
-              if pathlib.Path(original_name).suffix.lower() in HEIC_EXTS:
-                  print(f"  Convertendo HEIC → JPG: {dest_name}")
-                  img = Image.open(tmp)
-                  img.convert('RGB').save(dest, 'JPEG', quality=90)
-                  tmp.unlink()
-              else:
-                  tmp.rename(dest)
+              img = Image.open(tmp)
+              save_optimized(img, dest)
+              tmp.unlink()
 
               return dest_name
 
