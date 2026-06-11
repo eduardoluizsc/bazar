@@ -63,6 +63,17 @@
     .cat-nav a:hover { color: var(--brand); }
     .cat-nav a.active { color: var(--brand); border-bottom-color: var(--accent); }
 
+    .btn-filter-sold {
+      margin-left: auto; flex-shrink: 0;
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px; border: 2px solid var(--border);
+      background: #fff; color: var(--muted); font-size: .8rem; font-weight: 600;
+      cursor: pointer; transition: all .2s; white-space: nowrap;
+    }
+    .btn-filter-sold:hover { border-color: #ef4444; color: #ef4444; }
+    .btn-filter-sold.active { background: #ef4444; border-color: #ef4444; color: #fff; }
+    .btn-filter-sold .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
     /* SECTION */
     .section { max-width: 1160px; margin: 0 auto; padding: 60px 24px; }
     .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
@@ -162,6 +173,9 @@
 
 <nav class="cat-nav" id="cat-nav" style="display:none">
   <div class="cat-nav-inner" id="cat-nav-inner"></div>
+  <button class="btn-filter-sold" id="btn-filter-sold" onclick="toggleSold()">
+    <span class="dot"></span><span id="filter-label">Esconder vendidos</span>
+  </button>
 </nav>
 
 <main class="section">
@@ -245,7 +259,7 @@
       : `<a class="btn-interest" href="${waLink}" target="_blank">Tenho interesse</a>`;
 
     return `
-      <div class="card">
+      <div class="card" data-sold="${status === 'sold'}">
         <div class="card-img-wrap">
           <img src="${imgUrl}" alt="${label}" loading="lazy" />
           ${badgeHtml}
@@ -263,6 +277,25 @@
 
   function slugify(str) {
     return str.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  }
+
+  let hidingSold = false;
+  function toggleSold() {
+    hidingSold = !hidingSold;
+    const btn   = document.getElementById('btn-filter-sold');
+    const label = document.getElementById('filter-label');
+    btn.classList.toggle('active', hidingSold);
+    label.textContent = hidingSold ? 'Mostrar vendidos' : 'Esconder vendidos';
+    document.querySelectorAll('.card').forEach(card => {
+      if (card.dataset.sold === 'true') {
+        card.style.display = hidingSold ? 'none' : '';
+      }
+    });
+    // Oculta títulos de categorias que ficaram vazias
+    document.querySelectorAll('.category-block').forEach(block => {
+      const visible = [...block.querySelectorAll('.card')].some(c => c.style.display !== 'none');
+      block.style.display = visible ? '' : 'none';
+    });
   }
 
   async function loadProducts() {
