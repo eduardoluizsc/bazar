@@ -184,7 +184,7 @@
   <div class="cat-nav-inner" id="cat-nav-inner"></div>
   <button class="btn-filter-sold" id="btn-filter-sold" onclick="toggleSold()">
     <span class="dot"></span>
-    <span class="label-full" id="filter-label">Esconder vendidos</span>
+    <span class="label-full" id="filter-label">Ocultar vendidos</span>
     <span class="label-short" id="filter-label-short">Vendidos</span>
   </button>
 </nav>
@@ -296,7 +296,7 @@
     const btn   = document.getElementById('btn-filter-sold');
     const label = document.getElementById('filter-label');
     btn.classList.toggle('active', hidingSold);
-    label.textContent = hidingSold ? 'Mostrar vendidos' : 'Esconder vendidos';
+    label.textContent = hidingSold ? 'Mostrar vendidos' : 'Ocultar vendidos';
     document.getElementById('filter-label-short').textContent = hidingSold ? 'Mostrar' : 'Vendidos';
     document.querySelectorAll('.card').forEach(card => {
       if (card.dataset.sold === 'true') {
@@ -347,7 +347,7 @@
         navInner.innerHTML = categories.map(cat =>
           `<a href="#cat-${slugify(cat)}">${cat}</a>`
         ).join('');
-        nav.style.display = 'block';
+        nav.style.display = 'flex';
 
         // Destacar categoria visível
         const observer = new IntersectionObserver(entries => {
