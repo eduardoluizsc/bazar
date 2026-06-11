@@ -45,16 +45,17 @@
       position: sticky; top: 0; z-index: 100;
       background: #fff; border-bottom: 2px solid var(--border);
       box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex; align-items: stretch;
     }
     .cat-nav-inner {
-      max-width: 1160px; margin: 0 auto;
+      flex: 1; min-width: 0;
       display: flex; align-items: center; gap: 4px;
-      padding: 0 24px; overflow-x: auto;
+      padding: 0 16px; overflow-x: auto;
       scrollbar-width: none;
     }
     .cat-nav-inner::-webkit-scrollbar { display: none; }
     .cat-nav a {
-      display: inline-block; padding: 14px 18px;
+      display: inline-block; padding: 14px 14px;
       font-size: .9rem; font-weight: 600; color: var(--muted);
       text-decoration: none; white-space: nowrap;
       border-bottom: 3px solid transparent;
@@ -64,15 +65,23 @@
     .cat-nav a.active { color: var(--brand); border-bottom-color: var(--accent); }
 
     .btn-filter-sold {
-      margin-left: auto; flex-shrink: 0;
+      flex-shrink: 0;
       display: flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 999px; border: 2px solid var(--border);
+      padding: 0 16px;
+      border: none; border-left: 2px solid var(--border);
       background: #fff; color: var(--muted); font-size: .8rem; font-weight: 600;
       cursor: pointer; transition: all .2s; white-space: nowrap;
     }
-    .btn-filter-sold:hover { border-color: #ef4444; color: #ef4444; }
-    .btn-filter-sold.active { background: #ef4444; border-color: #ef4444; color: #fff; }
-    .btn-filter-sold .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .btn-filter-sold:hover { color: #ef4444; background: #fff5f5; }
+    .btn-filter-sold.active { color: #ef4444; background: #fff5f5; }
+    .btn-filter-sold .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .btn-filter-sold .label-full  { display: inline; }
+    .btn-filter-sold .label-short { display: none; }
+    @media (max-width: 500px) {
+      .btn-filter-sold { padding: 0 12px; }
+      .btn-filter-sold .label-full  { display: none; }
+      .btn-filter-sold .label-short { display: inline; }
+    }
 
     /* SECTION */
     .section { max-width: 1160px; margin: 0 auto; padding: 60px 24px; }
@@ -174,7 +183,9 @@
 <nav class="cat-nav" id="cat-nav" style="display:none">
   <div class="cat-nav-inner" id="cat-nav-inner"></div>
   <button class="btn-filter-sold" id="btn-filter-sold" onclick="toggleSold()">
-    <span class="dot"></span><span id="filter-label">Esconder vendidos</span>
+    <span class="dot"></span>
+    <span class="label-full" id="filter-label">Esconder vendidos</span>
+    <span class="label-short" id="filter-label-short">Vendidos</span>
   </button>
 </nav>
 
@@ -286,6 +297,7 @@
     const label = document.getElementById('filter-label');
     btn.classList.toggle('active', hidingSold);
     label.textContent = hidingSold ? 'Mostrar vendidos' : 'Esconder vendidos';
+    document.getElementById('filter-label-short').textContent = hidingSold ? 'Mostrar' : 'Vendidos';
     document.querySelectorAll('.card').forEach(card => {
       if (card.dataset.sold === 'true') {
         card.style.display = hidingSold ? 'none' : '';
