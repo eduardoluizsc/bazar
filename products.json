@@ -8,7 +8,7 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Caneca caveira_15.jpg",
+    "name": "Caneca caveira_8.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -69,10 +69,6 @@
   },
   {
     "name": "Coqueteleira drinks vidro_15.jpg",
-    "category": "Copos, canecas, taças"
-  },
-  {
-    "name": "Estante 145x60x40_100.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -200,7 +196,15 @@
     "category": "Cozinha"
   },
   {
+    "name": "Kit utensilios_30.jpg",
+    "category": "Cozinha"
+  },
+  {
     "name": "Kit utensílios cozinha_vendido.jpg",
+    "category": "Cozinha"
+  },
+  {
+    "name": "Liquidificador oster_150.jpg",
     "category": "Cozinha"
   },
   {
@@ -217,6 +221,10 @@
   },
   {
     "name": "Panela de arroz 1,8 Eletrolux_200.jpg",
+    "category": "Cozinha"
+  },
+  {
+    "name": "Panela de cuscuz_10.jpg",
     "category": "Cozinha"
   },
   {
@@ -256,6 +264,10 @@
     "category": "Cozinha"
   },
   {
+    "name": "Tapioqueira peneira e armazena_15.jpg",
+    "category": "Cozinha"
+  },
+  {
     "name": "Tigela vidro_vendido.jpg",
     "category": "Cozinha"
   },
@@ -273,6 +285,10 @@
   },
   {
     "name": "Caveira decoração_0.jpg",
+    "category": "Doações"
+  },
+  {
+    "name": "Colchão inflável + bomba_0.jpg",
     "category": "Doações"
   },
   {
@@ -388,12 +404,24 @@
     "category": "Eletronicos"
   },
   {
+    "name": "Monitor LG 24\"_200.jpg",
+    "category": "Eletronicos"
+  },
+  {
     "name": "TV 47 Samsung com Firestick_vendido.jpg",
     "category": "Eletronicos"
   },
   {
     "name": "TV 49 Samsung_vendido.jpg",
     "category": "Eletronicos"
+  },
+  {
+    "name": "Cama Queen Box Baú Corino Preto (baú com armazenamento) com Colchão Orthocrin molas ensacadas_2000.jpg",
+    "category": "Moveis"
+  },
+  {
+    "name": "Estante 145x60x40_100.jpg",
+    "category": "Moveis"
   },
   {
     "name": "Mesa de cabeceira 1_vendido.jpg",
@@ -408,12 +436,24 @@
     "category": "Moveis"
   },
   {
+    "name": "Mesa escritório 135x60x75 - Temos 2 unidades 1 - Valor unidade_100.jpg",
+    "category": "Moveis"
+  },
+  {
+    "name": "Mesa escritório 135x60x75 - Temos 2 unidades 2 - Valor unidade_100.jpg",
+    "category": "Moveis"
+  },
+  {
     "name": "Máquina lava e seca Samsung_vendido.jpg",
     "category": "Moveis"
   },
   {
     "name": "Sofá 2,30_1200.jpg",
     "category": "Moveis"
+  },
+  {
+    "name": "4 unidades porta velas vidro + velas_30.jpg",
+    "category": "Geral"
   },
   {
     "name": "Almofadas unidade_10.jpg",
@@ -432,7 +472,19 @@
     "category": "Geral"
   },
   {
+    "name": "Barraca acampamento_300.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Caixa de transporte pet rosa_40.jpg",
+    "category": "Geral"
+  },
+  {
     "name": "Escada_70.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Escova secadora mondial_30.jpg",
     "category": "Geral"
   },
   {
@@ -441,6 +493,50 @@
   },
   {
     "name": "Flores secas unidade_50.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Fogão acampamento Nautika usado 1 vez_100.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Jogo War Vikings_80.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 1_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 2_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 3_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 4_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 5_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 6_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 7_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 8_20.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Kit 10 cabides madeira 9_20.jpg",
     "category": "Geral"
   },
   {
@@ -456,7 +552,15 @@
     "category": "Geral"
   },
   {
+    "name": "Luva couro marrom G_100.jpg",
+    "category": "Geral"
+  },
+  {
     "name": "Mala de bordo_vendido.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Mini velas decorativas bateria 10 unidades funcionando_10.jpg",
     "category": "Geral"
   },
   {
@@ -464,7 +568,27 @@
     "category": "Geral"
   },
   {
+    "name": "Poker_30.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Porta velas vidro 6 unidades (2 caixas com 3) Lyor_20.jpg",
+    "category": "Geral"
+  },
+  {
     "name": "Quadro girafa_vendido.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Secador bivolt viagem_30.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Suporte para headphone aço_10.jpg",
+    "category": "Geral"
+  },
+  {
+    "name": "Umidificador mondial_50.jpg",
     "category": "Geral"
   },
   {
