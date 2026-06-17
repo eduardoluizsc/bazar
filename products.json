@@ -84,10 +84,6 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Taça vinho pequena_0.jpg",
-    "category": "Copos, canecas, taças"
-  },
-  {
     "name": "Taças 4 unidades_vendido.jpg",
     "category": "Copos, canecas, taças"
   },
@@ -105,6 +101,10 @@
   },
   {
     "name": "Taças Krug 3 unidades_vendido.jpg",
+    "category": "Copos, canecas, taças"
+  },
+  {
+    "name": "Taças Selinhos Verdemar Vinho (stolzle lausitz) 2 unidades_40.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -244,7 +244,7 @@
     "category": "Cozinha"
   },
   {
-    "name": "Sanduicheira_50.jpg",
+    "name": "Sanduicheira_30.jpg",
     "category": "Cozinha"
   },
   {
@@ -356,7 +356,7 @@
     "category": "Doações"
   },
   {
-    "name": "Suqueira_0.jpg",
+    "name": "Suqueira_vendido.jpg",
     "category": "Doações"
   },
   {
@@ -381,6 +381,10 @@
   },
   {
     "name": "Taça Pelizer_0.jpg",
+    "category": "Doações"
+  },
+  {
+    "name": "Taça vinho pequena_0.jpg",
     "category": "Doações"
   },
   {
