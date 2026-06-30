@@ -24,7 +24,7 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Caneca poderoso chefão_10.jpg",
+    "name": "Caneca poderoso chefão_vendido.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -56,7 +56,7 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Copo Verace 2 unidades_30.jpg",
+    "name": "Copo Verace 2 unidades_20.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -80,7 +80,7 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Taça Verace borda dourada_15.jpg",
+    "name": "Taça Verace borda dourada_10.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -96,7 +96,7 @@
     "category": "Copos, canecas, taças"
   },
   {
-    "name": "Taças Go Growler 2 unidades_20.jpg",
+    "name": "Taças Go Growler 2 unidades_16.jpg",
     "category": "Copos, canecas, taças"
   },
   {
@@ -160,7 +160,7 @@
     "category": "Cozinha"
   },
   {
-    "name": "Guardanapo de tecido 4 unidades_15.jpg",
+    "name": "Guardanapo de tecido 4 unidades_10.jpg",
     "category": "Cozinha"
   },
   {
@@ -200,7 +200,7 @@
     "category": "Cozinha"
   },
   {
-    "name": "Moedor café elétrico_80.jpg",
+    "name": "Moedor café elétrico_70.jpg",
     "category": "Cozinha"
   },
   {
@@ -236,7 +236,7 @@
     "category": "Cozinha"
   },
   {
-    "name": "Pratos 2 unidades_40.jpg",
+    "name": "Pratos Selinhos Verdemar 2 unidades_40.jpg",
     "category": "Cozinha"
   },
   {
@@ -264,11 +264,11 @@
     "category": "Cozinha"
   },
   {
-    "name": "Caneca Bulldog alça colada (direto de Amsterdam)_0.jpg",
+    "name": "Caneca Bulldog alça colada (direto de Amsterdam)_vendido.jpg",
     "category": "Doações"
   },
   {
-    "name": "Caveira decoração_0.jpg",
+    "name": "Caveira decoração_vendido.jpg",
     "category": "Doações"
   },
   {
@@ -276,7 +276,7 @@
     "category": "Doações"
   },
   {
-    "name": "Copo dose drinks_0.jpg",
+    "name": "Copo dose drinks_vendido.jpg",
     "category": "Doações"
   },
   {
@@ -288,7 +288,7 @@
     "category": "Doações"
   },
   {
-    "name": "Copo Whisky ou Campari_0.jpg",
+    "name": "Copo Whisky ou Campari_vendido.jpg",
     "category": "Doações"
   },
   {
@@ -324,7 +324,7 @@
     "category": "Doações"
   },
   {
-    "name": "Quadro begin_0.jpg",
+    "name": "Quadro begin_vendido.jpg",
     "category": "Doações"
   },
   {
@@ -404,6 +404,10 @@
     "category": "Eletronicos"
   },
   {
+    "name": "Luva couro marrom G_100.jpg",
+    "category": "Moto"
+  },
+  {
     "name": "Cama Queen Box Baú Corino Preto (baú com armazenamento) com Colchão Orthocrin molas ensacadas_2000.jpg",
     "category": "Moveis"
   },
@@ -444,7 +448,7 @@
     "category": "Geral"
   },
   {
-    "name": "Almofadas unidade_10.jpg",
+    "name": "Almofadas unidade_8.jpg",
     "category": "Geral"
   },
   {
@@ -484,7 +488,7 @@
     "category": "Geral"
   },
   {
-    "name": "Flores secas unidade_50.jpg",
+    "name": "Flores secas unidade_vendido.jpg",
     "category": "Geral"
   },
   {
@@ -544,10 +548,6 @@
     "category": "Geral"
   },
   {
-    "name": "Luva couro marrom G_100.jpg",
-    "category": "Geral"
-  },
-  {
     "name": "Mala de bordo_vendido.jpg",
     "category": "Geral"
   },
@@ -576,7 +576,7 @@
     "category": "Geral"
   },
   {
-    "name": "Suporte para headphone aço_10.jpg",
+    "name": "Suporte para headphone aço_vendido.jpg",
     "category": "Geral"
   },
   {
@@ -592,7 +592,7 @@
     "category": "Geral"
   },
   {
-    "name": "Weasy_200.jpg",
+    "name": "Weasy_100.jpg",
     "category": "Geral"
   }
 ]
