@@ -182,10 +182,10 @@
 
 <nav class="cat-nav" id="cat-nav" style="display:none">
   <div class="cat-nav-inner" id="cat-nav-inner"></div>
-  <button class="btn-filter-sold" id="btn-filter-sold" onclick="toggleSold()">
+  <button class="btn-filter-sold active" id="btn-filter-sold" onclick="toggleSold()">
     <span class="dot"></span>
-    <span class="label-full" id="filter-label">Ocultar vendidos</span>
-    <span class="label-short" id="filter-label-short">Vendidos</span>
+    <span class="label-full" id="filter-label">Mostrar vendidos</span>
+    <span class="label-short" id="filter-label-short">Mostrar</span>
   </button>
 </nav>
 
@@ -290,9 +290,13 @@
     return str.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   }
 
-  let hidingSold = false;
+  let hidingSold = true;
   function toggleSold() {
     hidingSold = !hidingSold;
+    applySoldFilter();
+  }
+
+  function applySoldFilter() {
     const btn   = document.getElementById('btn-filter-sold');
     const label = document.getElementById('filter-label');
     btn.classList.toggle('active', hidingSold);
@@ -363,6 +367,8 @@
 
         document.querySelectorAll('.category-block').forEach(el => observer.observe(el));
       }
+
+      applySoldFilter();
 
     } catch (e) {
       container.innerHTML = `<div class="state-msg">Erro ao carregar produtos.<br><small>${e.message}</small></div>`;
